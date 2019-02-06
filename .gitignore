@@ -1,0 +1,10 @@
+.idea/
+.vscode/
+node_modules/
+.DS_Store
+npm-debug.log
+config/*.json
+!config/*.json.example
+logs/*
+!logs/.gitkeep
+package-lock.json
