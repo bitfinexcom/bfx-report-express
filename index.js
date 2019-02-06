@@ -6,7 +6,6 @@ const express = require('express')
 const app = express()
 const config = require('config')
 const morgan = require('morgan')
-const methodOverride = require('method-override')
 const bodyParser = require('body-parser')
 
 module.exports = { app }
@@ -30,8 +29,6 @@ const host = config.get('app.host')
 app.use(corsService.corsBase())
 app.use(headersMiddleware)
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(methodOverride())
 
 if (
   config.has('enableLogDebug') &&
