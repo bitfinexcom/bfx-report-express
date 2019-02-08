@@ -7,6 +7,7 @@ const app = express()
 const config = require('config')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const fs = require('fs')
 
 module.exports = { app }
 
@@ -25,6 +26,10 @@ const routes = require('./src/routes')
 
 const port = config.get('app.port')
 const host = config.get('app.host')
+const unixSocket = (
+  config.has('app.unixSocket') &&
+  config.get('app.unixSocket')
+)
 
 app.use(corsService.corsBase())
 app.use(headersMiddleware)
@@ -46,10 +51,29 @@ app.use('/api/', routes)
 app.use(notFoundMiddleware)
 app.use(errorsMiddleware)
 
-const server = app.listen(port, host, () => {
-  const host = server.address().address
-  const port = server.address().port
+const args = unixSocket && typeof unixSocket === 'string'
+  ? [unixSocket]
+  : [port, host]
 
-  logger.info(`Server listening on host ${host} port ${port}`)
+if (args.length === 1) {
+  try {
+    fs.accessSync(unixSocket, fs.constants.R_OK | fs.constants.W_OK)
+    fs.unlinkSync(unixSocket)
+  } catch (err) {}
+}
+
+const server = app.listen(...args, () => {
+  if (args.length === 1) {
+    const address = server.address()
+
+    fs.chmodSync(address, '777')
+    logger.info(`Server listening on unix socket ${address}`)
+  } else {
+    const host = server.address().address
+    const port = server.address().port
+
+    logger.info(`Server listening on host ${host} port ${port}`)
+  }
+
   app.emit('listened', server)
 })
