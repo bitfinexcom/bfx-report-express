@@ -27,8 +27,11 @@ const routes = require('./src/routes')
 const port = config.get('app.port')
 const host = config.get('app.host')
 const unixSocket = (
-  config.has('app.unixSocket') &&
-  config.get('app.unixSocket')
+  process.env.UNIX_SOCKET ||
+  (
+    config.has('app.unixSocket') &&
+    config.get('app.unixSocket')
+  )
 )
 
 app.use(corsService.corsBase())
@@ -52,7 +55,7 @@ app.use(notFoundMiddleware)
 app.use(errorsMiddleware)
 
 const args = unixSocket && typeof unixSocket === 'string'
-  ? [unixSocket]
+  ? [unixSocket.trim()]
   : [port, host]
 
 if (args.length === 1) {
