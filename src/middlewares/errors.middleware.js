@@ -27,6 +27,10 @@ const _isGreaterLimitNeededError = (err) => {
   return /ERR_GREATER_LIMIT_IS_NEEDED/.test(err.toString())
 }
 
+const _isDuringSyncMethodAccessError = (err) => {
+  return /ERR_DURING_SYNC_METHOD_IS_NOT_AVAILABLE/.test(err.toString())
+}
+
 module.exports = (err, req, res, next) => {
   const id = (req.body && req.body.id) || null
 
@@ -50,6 +54,10 @@ module.exports = (err, req, res, next) => {
   if (_isGreaterLimitNeededError(err)) {
     err.statusCode = 400
     err.statusMessage = 'A greater limit is needed as to show the data correctly'
+  }
+  if (_isDuringSyncMethodAccessError(err)) {
+    err.statusCode = 400
+    err.statusMessage = 'Sync with db is taking place, please wait till sync is completed and then try again'
   }
 
   failure(
