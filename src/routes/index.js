@@ -7,8 +7,14 @@ module.exports = router
 
 const { asyncErrorCatcher } = require('../services/helpers')
 const controllers = require('../controllers')
-const baseController = asyncErrorCatcher(controllers.baseController)
+const {
+  checkAuth,
+  checkStoredLocally,
+  getData,
+  verifyDigitalSignature
+} = asyncErrorCatcher(controllers.baseController)
 
-router.post('/check-auth', baseController.checkAuth)
-router.post('/check-stored-locally', baseController.checkStoredLocally)
-router.post('/get-data', baseController.getData)
+router.post('/check-auth', checkAuth)
+router.post('/check-stored-locally', checkStoredLocally)
+router.post('/get-data', getData)
+router.post('/verify-digital-signature', verifyDigitalSignature)

@@ -2,9 +2,22 @@
 
 const {
   grenacheClientService: gClientService,
+  getHashAndSignatureService,
   helpers
 } = require('../services')
 const { success } = helpers.responses
+
+const verifyDigitalSignature = async (req, res) => {
+  const args = await getHashAndSignatureService(req, res)
+  const query = {
+    action: 'verifyDigitalSignature',
+    args: [null, args]
+  }
+
+  const result = await gClientService.request(query)
+
+  success(200, { result, id: null }, res)
+}
 
 const checkAuth = async (req, res) => {
   const id = req.body.id || null
@@ -85,5 +98,6 @@ const getData = async (req, res) => {
 module.exports = {
   checkAuth,
   checkStoredLocally,
-  getData
+  getData,
+  verifyDigitalSignature
 }
