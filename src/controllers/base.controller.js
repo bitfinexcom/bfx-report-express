@@ -11,7 +11,7 @@ const verifyDigitalSignature = async (req, res) => {
   const args = await getHashAndSignatureService(req, res)
   const query = {
     action: 'verifyDigitalSignature',
-    args: [null, args]
+    args: [args]
   }
 
   const result = await gClientService.request(query)
