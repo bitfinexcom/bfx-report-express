@@ -37,7 +37,7 @@ module.exports = (req, res) => {
       fileStream,
       filename
     ) => {
-      if (!filename) {
+      if (!filename || args.fileHash) {
         return fileStream.resume()
       }
       fileStream.on('error', () => {
