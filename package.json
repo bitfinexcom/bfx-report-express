@@ -1,6 +1,6 @@
 {
   "name": "bfx-report-express",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Express server of reporting tool",
   "main": "index.js",
   "engine": {
@@ -17,6 +17,9 @@
   "bugs": {
     "url": "https://github.com/bitfinexcom/bfx-report-express/issues"
   },
+  "contributors": [
+    "Vladimir Voronkov <vsvoronkov@gmail.com>"
+  ],
   "homepage": "https://github.com/bitfinexcom/bfx-report-express#readme",
   "dependencies": {
     "better-npm-run": "^0.1.1",
