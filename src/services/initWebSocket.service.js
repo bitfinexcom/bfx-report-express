@@ -82,6 +82,11 @@ module.exports = (server) => {
 
         transport.connect()
 
+        const { inactivityTimeout } = { ...transport.conf }
+        const inactivityInterval = setInterval(() => {
+          transport.setLastRequestTime()
+        }, inactivityTimeout / 2)
+
         const { socket } = transport
 
         socket.on('message', (data) => {
@@ -139,10 +144,12 @@ module.exports = (server) => {
 
         socket.on('error', () => {
           _sendError(ws, new Error('ERR_GRENACHE_WS'))
+          clearInterval(inactivityInterval)
           ws.close(1001)
         })
         socket.on('close', () => {
           _sendError(ws, new Error('GRENACHE_WS_IS_CLOCED'))
+          clearInterval(inactivityInterval)
           ws.close(1001)
         })
 
