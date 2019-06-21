@@ -26,6 +26,10 @@ const _sendData = (ws, data) => {
 }
 
 const _sendError = (ws, err) => {
+  if (ws.readyState !== WebSocket.OPEN) {
+    return
+  }
+
   const {
     code,
     message
