@@ -43,6 +43,14 @@ const _sendError = (ws, err) => {
   })
 }
 
+const heartbeat = (socket) => {
+  clearTimeout(socket.pingTimeout)
+
+  socket.pingTimeout = setTimeout(() => {
+    socket.terminate()
+  }, 10000 + 1000)
+}
+
 module.exports = (server) => {
   const link = new Link({
     grape,
@@ -60,6 +68,12 @@ module.exports = (server) => {
   })
 
   wss.on('connection', (ws) => {
+    ws.isAlive = true
+
+    ws.on('pong', () => {
+      ws.isAlive = true
+    })
+
     link.lookup(
       key, {},
       (err, dests) => {
@@ -93,6 +107,15 @@ module.exports = (server) => {
 
         const { socket } = transport
 
+        socket.on('open', () => {
+          heartbeat(socket)
+        })
+        socket.on('ping', () => {
+          heartbeat(socket)
+        })
+        socket.on('close', () => {
+          clearTimeout(socket.pingTimeout)
+        })
         socket.on('message', (data) => {
           const payload = transport.parse(data)
 
@@ -167,5 +190,22 @@ module.exports = (server) => {
         })
       }
     )
+  })
+
+  const aliveStateInterval = setInterval(() => {
+    wss.clients.forEach((ws) => {
+      if (!ws.isAlive) {
+        ws.terminate()
+
+        return
+      }
+
+      ws.isAlive = false
+      ws.ping(null, false)
+    })
+  }, 10000)
+
+  wss.on('close', () => {
+    clearInterval(aliveStateInterval)
   })
 }
