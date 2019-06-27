@@ -210,6 +210,7 @@ module.exports = (server) => {
 
       ws.isAlive = false
       ws.ping(null, false)
+      _sendData(ws, { action: '__ping__' })
     })
   }, 10000)
 
