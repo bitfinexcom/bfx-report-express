@@ -22,13 +22,21 @@ const {
 } = config.get('grenacheClient')
 
 const _sendData = (ws, data) => {
-  ws.send(JSON.stringify(data))
-}
-
-const _sendError = (ws, err) => {
   if (ws.readyState !== WebSocket.OPEN) {
     return
   }
+
+  ws.send(JSON.stringify(data))
+}
+
+const _sendError = (ws, error = 'ERR_WS') => {
+  if (ws.readyState !== WebSocket.OPEN) {
+    return
+  }
+
+  const err = error instanceof Error
+    ? error
+    : new Error(error)
 
   const {
     code,
@@ -170,12 +178,12 @@ module.exports = (server) => {
         })
 
         socket.on('error', () => {
-          _sendError(ws, new Error('ERR_GRENACHE_WS'))
+          _sendError(ws, 'ERR_GRENACHE_WS')
           clearInterval(inactivityInterval)
           ws.close(1001)
         })
         socket.on('close', () => {
-          _sendError(ws, new Error('GRENACHE_WS_IS_CLOCED'))
+          _sendError(ws, 'GRENACHE_WS_IS_CLOCED')
           clearInterval(inactivityInterval)
           ws.close(1001)
         })
