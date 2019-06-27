@@ -26,7 +26,11 @@ const _isDuringSyncMethodAccessError = (err) => {
   return /ERR_DURING_SYNC_METHOD_IS_NOT_AVAILABLE/.test(err.toString())
 }
 
-module.exports = (err, log = logger) => {
+module.exports = (error, log = logger) => {
+  const err = error instanceof Error
+    ? error
+    : new Error('Internal Server Error')
+
   log.error(err.stack || err)
 
   if (_isAuthError(err)) {
