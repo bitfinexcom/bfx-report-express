@@ -19,7 +19,8 @@ const {
 const {
   corsService,
   logDebugService,
-  logService
+  logService,
+  initWebSocketService
 } = require('./src/services')
 const { logger } = logService
 const routes = require('./src/routes')
@@ -77,6 +78,8 @@ const server = app.listen(...args, () => {
 
     logger.info(`Server listening on host ${host} port ${port}`)
   }
+
+  initWebSocketService(server)
 
   app.emit('listened', server)
 })
