@@ -3,7 +3,7 @@
 const { logger } = require('./log.service')
 
 const _isAuthError = (err) => {
-  return /(missing api key or secret)|(apikey: digest invalid)|(apikey: invalid)|(ERR_AUTH_UNAUTHORIZED)|(Cannot read property 'email')/.test(err.toString())
+  return /(token: invalid)|(missing api key or secret)|(apikey: digest invalid)|(apikey: invalid)|(ERR_AUTH_UNAUTHORIZED)|(Cannot read property 'email')/.test(err.toString())
 }
 
 const _isHasJobInQueueError = (err) => {
