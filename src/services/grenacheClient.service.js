@@ -22,7 +22,7 @@ const link = new Link({
 
 link.start()
 
-const peer = new Peer(link, {})
+const peer = new Peer(link, { requestTimeout: 90000 })
 
 peer.init()
 
