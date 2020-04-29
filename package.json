@@ -1,6 +1,6 @@
 {
   "name": "bfx-report-express",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Express server of reporting tool",
   "main": "index.js",
   "engine": {
@@ -11,6 +11,11 @@
     "url": "git+https://github.com/bitfinexcom/bfx-report-express.git"
   },
   "license": "Apache-2.0",
+  "contributors": [
+    "Vladimir Voronkov <vsvoronkov@gmail.com>",
+    "Paolo Ardoino <paolo@btifinex.com>",
+    "Ezequiel Wernicke <ezequiel.wernicke@bitfinex.com>"
+  ],
   "keywords": [
     "bitfinex"
   ],
