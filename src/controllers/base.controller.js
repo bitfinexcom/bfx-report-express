@@ -46,7 +46,7 @@ const checkStoredLocally = async (req, res) => {
   success(200, { result: email, id }, res)
 }
 
-const getData = async (req, res) => {
+const jsonRpc = async (req, res) => {
   const body = { ...req.body }
   const {
     id = null,
@@ -65,5 +65,5 @@ const getData = async (req, res) => {
 
 module.exports = {
   checkStoredLocally,
-  getData
+  jsonRpc
 }

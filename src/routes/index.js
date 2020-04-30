@@ -10,4 +10,4 @@ const controllers = require('../controllers')
 const baseController = asyncErrorCatcher(controllers.baseController)
 
 router.post('/check-stored-locally', baseController.checkStoredLocally)
-router.post('/get-data', baseController.getData)
+router.post('/json-rpc', baseController.jsonRpc)
