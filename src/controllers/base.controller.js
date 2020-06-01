@@ -6,40 +6,10 @@ const {
 } = require('../services')
 const { success } = helpers.responses
 
-const checkAuth = async (req, res) => {
-  const id = req.body.id || null
-  const query = {
-    action: 'getEmail',
-    args: [req.body]
-  }
-
-  const isSyncMode = await gClientService.request({
-    ...query,
-    action: 'isSyncModeConfig'
-  })
-
-  if (isSyncMode) {
-    await gClientService.request({
-      ...query,
-      action: 'login'
-    })
-
-    success(200, { result: true, id }, res)
-
-    return
-  }
-
-  const result = await gClientService.request(query)
-
-  if (!result) {
-    throw new Error('ERR_AUTH_UNAUTHORIZED')
-  }
-
-  success(200, { result: true, id }, res)
-}
-
 const checkStoredLocally = async (req, res) => {
-  const id = req.body.id || null
+  const body = { ...req.body }
+  const { id = null } = body
+
   const queryS3 = {
     action: 'lookUpFunction',
     args: [{
@@ -52,28 +22,39 @@ const checkStoredLocally = async (req, res) => {
       params: { service: 'rest:ext:sendgrid' }
     }]
   }
-  const queryGetEmail = {
-    action: 'getEmail',
-    args: [req.body]
+  const queryGetUser = {
+    action: 'verifyUser',
+    args: [body]
   }
 
-  const countS3Services = await gClientService.request(queryS3)
-  const countSendgridServices = await gClientService.request(querySendgrid)
-  let result = false
+  const countS3Services = await gClientService
+    .request(queryS3)
+  const countSendgridServices = await gClientService
+    .request(querySendgrid)
 
-  if (countS3Services && countSendgridServices) {
-    result = await gClientService.request(queryGetEmail)
+  if (
+    !countS3Services ||
+    !countSendgridServices
+  ) {
+    success(200, { result: false, id }, res)
+
+    return
   }
 
-  success(200, { result, id }, res)
+  const { email } = await gClientService
+    .request(queryGetUser)
+  success(200, { result: email, id }, res)
 }
 
-const getData = async (req, res) => {
+const jsonRpc = async (req, res) => {
   const body = { ...req.body }
-  const id = body.id || null
+  const {
+    id = null,
+    method: action = ''
+  } = body
   delete body.method
   const query = {
-    action: req.body.method || '',
+    action,
     args: [body]
   }
 
@@ -83,7 +64,6 @@ const getData = async (req, res) => {
 }
 
 module.exports = {
-  checkAuth,
   checkStoredLocally,
-  getData
+  jsonRpc
 }

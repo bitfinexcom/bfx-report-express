@@ -9,6 +9,11 @@ const { asyncErrorCatcher } = require('../services/helpers')
 const controllers = require('../controllers')
 const baseController = asyncErrorCatcher(controllers.baseController)
 
-router.post('/check-auth', baseController.checkAuth)
 router.post('/check-stored-locally', baseController.checkStoredLocally)
-router.post('/get-data', baseController.getData)
+router.post('/json-rpc', baseController.jsonRpc)
+
+/**
+ * @deprecated
+ * The endpoint will be removed in the future, now need to use `/json-rpc` one
+ */
+router.post('/get-data', baseController.jsonRpc)

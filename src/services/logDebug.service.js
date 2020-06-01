@@ -11,7 +11,7 @@ const enableInfo = isEnable
 const enableDev = isEnable
 const enableError = isEnable
 
-let _token = []
+const _token = []
 
 const infoToken = `${prefix}info${postfix}`
 const devToken = `${prefix}dev${postfix}`
