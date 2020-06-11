@@ -174,7 +174,7 @@ if (enableConsole) {
   })
 }
 
-let arrLogTransports = Object.values(logTransports)
+const arrLogTransports = Object.values(logTransports)
 
 const logger = createLogger({
   levels: loggerConfig.levels,
