@@ -7,4 +7,3 @@ config/*.json
 !config/*.json.example
 logs/*
 !logs/.gitkeep
-package-lock.json
