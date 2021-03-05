@@ -26,6 +26,10 @@ const _isDuringSyncMethodAccessError = (err) => {
   return /ERR_DURING_SYNC_METHOD_IS_NOT_AVAILABLE/.test(err.toString())
 }
 
+const _isDataConsistencyError = (err) => {
+  return /ERR_COLLECTIONS_DATA_IS_NOT_CONSISTENT/.test(err.toString())
+}
+
 const _isUserWasPreviouslyStoredInDbError = (err) => {
   return /ERR_USER_WAS_PREVIOUSLY_STORED_IN_DB/.test(err.toString())
 }
@@ -59,6 +63,10 @@ module.exports = (error, log = logger) => {
   if (_isDuringSyncMethodAccessError(err)) {
     err.statusCode = 400
     err.statusMessage = 'Sync with db is taking place, please wait till sync is completed and then try again'
+  }
+  if (_isDataConsistencyError(err)) {
+    err.statusCode = 400
+    err.statusMessage = 'The db has inconsistent data, please force sync and wait for end and then try again'
   }
   if (_isUserWasPreviouslyStoredInDbError(err)) {
     err.statusCode = 409
