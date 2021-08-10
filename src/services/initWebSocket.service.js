@@ -1,5 +1,7 @@
 'use strict'
 
+// TODO: need to rework
+
 const { omit } = require('lodash')
 const WebSocket = require('ws')
 const { PeerRPCClient } = require('grenache-nodejs-ws')
@@ -41,7 +43,7 @@ const _sendError = (ws, error = 'ERR_WS') => {
   const {
     code,
     message
-  } = prepareErrorDataService(err, logger)
+  } = prepareErrorDataService(err, { logger })
 
   _sendData(ws, {
     error: {
