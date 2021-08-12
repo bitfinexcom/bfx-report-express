@@ -26,37 +26,33 @@ const peer = new Peer(link, { requestTimeout: 90000 })
 
 peer.init()
 
-const request = (query, ...args) => {
-  let _args = []
-
-  if (typeof args[0] === 'function') {
-    _args[0] = { timeout: 90000 }
-    _args[1] = args[0]
-  }
-
-  if (typeof args[0] === 'object') {
-    _args = [...args]
-  }
-
+const request = (query, cb) => {
   return new Promise((resolve, reject) => {
-    peer.request(gClientConf.query, query, _args[0], (err, data) => {
-      if (err) {
-        logger.debug(`Found error at ${err.stack || err}`)
-        reject(err)
+    peer.request(
+      gClientConf.query,
+      query,
+      { timeout: 90000 },
+      (err, data) => {
+        if (err) {
+          logger.debug(`Found error at ${err.stack || err}`)
+          reject(err)
 
-        if (typeof _args[1] === 'function') {
-          _args[1](err)
+          if (typeof cb === 'function') {
+            cb(err)
+          }
+
+          return
         }
 
-        return
-      }
+        if (typeof cb === 'function') {
+          cb(err, data)
 
-      resolve(data)
+          return
+        }
 
-      if (typeof _args[1] === 'function') {
-        _args[1](err, data)
+        resolve(data)
       }
-    })
+    )
   })
 }
 
