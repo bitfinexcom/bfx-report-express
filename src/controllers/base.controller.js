@@ -1,7 +1,9 @@
 'use strict'
 
 const { grenacheClientService } = require('../services')
-const { jsonRpcResponder } = require('../services/helpers')
+const {
+  jsonRpcResponder
+} = require('../services/helpers/responses')
 
 const jsonRpc = async (req, res) => {
   const body = { ...req.body }
