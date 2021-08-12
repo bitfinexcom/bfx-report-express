@@ -22,7 +22,11 @@ const jsonRpcResponder = (req, res, rpcRes) => {
     const code = 500
     const message = 'Internal Server Error'
 
-    logger.error(rpcRes.stack || rpcRes)
+    const loggingErr = rpcRes instanceof Error
+      ? rpcRes.stack
+      : rpcRes
+
+    logger.error(loggingErr)
 
     res.status(code)
     res.json({
