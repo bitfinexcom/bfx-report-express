@@ -39,7 +39,7 @@
     "ws": "^7.0.0"
   },
   "devDependencies": {
-    "standard": "^14.3.3",
+    "standard": "^16.0.3",
     "nodemon": "^2.0.12"
   },
   "nodemonConfig": {
