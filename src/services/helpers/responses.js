@@ -56,6 +56,8 @@ const jsonRpcResponder = (req, res, rpcRes) => {
       error: { code, message, data },
       id
     })
+
+    return res
   }
 
   res.status(200)
