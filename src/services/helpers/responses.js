@@ -1,10 +1,14 @@
 'use strict'
 
-const { logger } = require('../log.service')
+const { logger: internalLogger } = require('../log.service')
 
 const JSON_RPC_VERSION = '2.0'
 
-const jsonRpcResponder = (req, res, rpcRes) => {
+const jsonRpcResponder = (req, res, rpcRes, opts = {}) => {
+  const {
+    logger = internalLogger
+  } = opts
+
   const _body = (
     req.body &&
     typeof req.body === 'object'
