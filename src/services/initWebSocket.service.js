@@ -1,14 +1,13 @@
 'use strict'
 
-const { omit } = require('lodash')
 const WebSocket = require('ws')
 const { PeerRPCClient } = require('grenache-nodejs-ws')
 const Link = require('grenache-nodejs-link')
 const config = require('config')
 
 const { CustomLogger } = require('./log.service')
-const prepareErrorDataService = require('./prepareErrorData.service')
 const { checkGrenacheClientConf } = require('./helpers')
+const { jsonRpcResponder } = require('./helpers/responses')
 
 checkGrenacheClientConf()
 
@@ -29,7 +28,57 @@ const _sendData = (ws, data) => {
   ws.send(JSON.stringify(data))
 }
 
-const _sendError = (ws, error = 'ERR_WS') => {
+const _getReqAdapter = (body) => {
+  if (
+    !body ||
+    typeof body !== 'object'
+  ) {
+    return { body: { id: null } }
+  }
+
+  const { id = null, action = '', method = '' } = body
+
+  if (
+    action &&
+    typeof action === 'string'
+  ) {
+    return { body: { id, action } }
+  }
+  if (
+    method &&
+    typeof method === 'string'
+  ) {
+    return { body: { id, action: method } }
+  }
+
+  return { body: { id } }
+}
+
+const _sendJsonRpcResponse = (ws, data, body) => {
+  const reqAdapter = _getReqAdapter(body)
+  const resAdapter = {
+    code: 200,
+    status (code) {
+      this.code = code
+    },
+    json (rpcRes) {
+      if (reqAdapter.action) {
+        rpcRes.action = reqAdapter.action
+      }
+
+      _sendData(ws, rpcRes)
+    }
+  }
+
+  jsonRpcResponder(
+    reqAdapter,
+    resAdapter,
+    data,
+    { logger }
+  )
+}
+
+const _sendError = (ws, error = 'ERR_WS', body) => {
   if (ws.readyState !== WebSocket.OPEN) {
     return
   }
@@ -38,17 +87,7 @@ const _sendError = (ws, error = 'ERR_WS') => {
     ? error
     : new Error(error)
 
-  const {
-    code,
-    message
-  } = prepareErrorDataService(err, logger)
-
-  _sendData(ws, {
-    error: {
-      code,
-      message
-    }
-  })
+  _sendJsonRpcResponse(ws, err, body)
 }
 
 const heartbeat = (socket) => {
@@ -134,7 +173,7 @@ module.exports = (server) => {
           const [sid, err, res] = payload
 
           if (err) {
-            _sendError(ws, err)
+            _sendError(ws, err, res)
 
             return
           }
@@ -149,31 +188,19 @@ module.exports = (server) => {
             return
           }
 
-          _sendData(ws, res)
+          _sendJsonRpcResponse(ws, res)
         })
         ws.on('message', (data) => {
           const payload = transport.parse(data)
 
-          if (!payload) {
-            return
-          }
-
-          const body = { ...payload }
-          const { id = null, method = '' } = body
-          const args = omit(body, ['id'])
-
-          peer.request(key, args, { timeout: 10000 }, (err, result) => {
+          peer.request(key, payload, { timeout: 10000 }, (err, result) => {
             if (err) {
-              _sendError(ws, err)
+              _sendError(ws, err, payload)
 
               return
             }
 
-            _sendData(ws, {
-              action: method,
-              result,
-              id
-            })
+            _sendJsonRpcResponse(ws, result, payload)
           })
         })
 
