@@ -1,21 +1,16 @@
 'use strict'
 
 const {
-  helpers,
-  logService
-} = require('../services')
-const { logger } = logService
-const { failure } = helpers.responses
+  jsonRpcResponder,
+  JSON_RPC_VERSION
+} = require('../services/helpers/responses')
 
 module.exports = (req, res, next) => {
-  const id = req.body.id || null
-
-  logger.error('404 Not found')
-
-  failure(
-    404,
-    'Not found',
-    res,
-    id
-  )
+  jsonRpcResponder(req, res, {
+    jsonrpc: JSON_RPC_VERSION,
+    error: {
+      code: 404,
+      message: 'Not found'
+    }
+  })
 }

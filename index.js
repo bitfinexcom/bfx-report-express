@@ -6,7 +6,6 @@ const express = require('express')
 const app = express()
 const config = require('config')
 const morgan = require('morgan')
-const bodyParser = require('body-parser')
 const fs = require('fs')
 
 module.exports = { app }
@@ -37,7 +36,7 @@ const unixSocket = (
 
 app.use(corsService.corsBase())
 app.use(headersMiddleware)
-app.use(bodyParser.json())
+app.use(express.json())
 
 if (
   config.has('enableLogDebug') &&
