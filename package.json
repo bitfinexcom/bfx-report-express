@@ -28,7 +28,7 @@
     "colors": "1.4.0",
     "config": "^3.0.1",
     "cors": "^2.8.5",
-    "debug": "^4.1.1",
+    "debug": "4.3.2",
     "express": "4.17.1",
     "grenache-nodejs-http": "0.7.12",
     "grenache-nodejs-link": "0.7.12",
