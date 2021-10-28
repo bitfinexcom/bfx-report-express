@@ -29,7 +29,7 @@
     "config": "^3.0.1",
     "cors": "^2.8.5",
     "debug": "^4.1.1",
-    "express": "^4.16.4",
+    "express": "4.17.1",
     "grenache-nodejs-http": "0.7.12",
     "grenache-nodejs-link": "0.7.12",
     "grenache-nodejs-ws": "git+https://github.com:bitfinexcom/grenache-nodejs-ws.git",
