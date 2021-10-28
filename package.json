@@ -26,7 +26,7 @@
   "dependencies": {
     "better-npm-run": "0.1.1",
     "colors": "1.4.0",
-    "config": "^3.0.1",
+    "config": "3.3.6",
     "cors": "2.8.5",
     "debug": "4.3.2",
     "express": "4.17.1",
