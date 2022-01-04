@@ -12,9 +12,9 @@ const basePath = 'logs/'
 const ext = '.log'
 
 const logLabel = isDevEnv ? ':app-dev' : ':app'
-const pathError = isEnable && (isProdEnv || isDevEnv) ? `${basePath}error${ext}` : null
-const pathExcLogger = isEnable && (isProdEnv || isDevEnv) ? `${basePath}exceptions-logger${ext}` : null
-const pathLog = isEnable && isDevEnv ? `${basePath}log${ext}` : null
+const pathError = isEnable && (isProdEnv || isDevEnv) ? `${basePath}errors-express${ext}` : null
+const pathExcLogger = isEnable && (isProdEnv || isDevEnv) ? `${basePath}exceptions-express${ext}` : null
+const pathLog = isEnable && isDevEnv ? `${basePath}logs-express${ext}` : null
 const enableConsole = isEnable && isDevEnv
 const enableColor = isEnable && isDevEnv
 const enableColorPathError = false
