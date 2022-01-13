@@ -20,6 +20,37 @@ const jsonRpc = async (req, res) => {
   jsonRpcResponder(req, res, rpcRes)
 }
 
+const auth = async (req, res) => {
+  const xAuthTokenHeader = req.headers?.['x-auth-token']
+  const xOriginalURIHeader = req.headers?.['x-original-uri']
+  const params = xOriginalURIHeader.split('?')[1]
+
+  const queryToken = req.query?.token ?? null
+  const uriToken = new URLSearchParams(params).get('token')
+  const headerToken = (uriToken && typeof uriToken === 'string')
+    ? uriToken
+    : xAuthTokenHeader
+  const token = (queryToken && typeof queryToken === 'string')
+    ? queryToken
+    : headerToken
+
+  if (!token) {
+    res.status(401).send()
+
+    return
+  }
+
+  const query = {
+    action: 'verifyUser',
+    args: [{ auth: { token } }]
+  }
+
+  const rpcRes = await grenacheClientService.request(query)
+
+  jsonRpcResponder(req, res, rpcRes)
+}
+
 module.exports = {
-  jsonRpc
+  jsonRpc,
+  auth
 }
