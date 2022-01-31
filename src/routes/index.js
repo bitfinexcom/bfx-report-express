@@ -10,6 +10,7 @@ const controllers = require('../controllers')
 const baseController = asyncErrorCatcher(controllers.baseController)
 
 router.post('/json-rpc', baseController.jsonRpc)
+router.get('/auth', baseController.auth)
 
 /**
  * @deprecated
