@@ -166,11 +166,15 @@ module.exports = (server) => {
         socket.on('message', (data) => {
           const payload = transport.parse(data)
 
-          if (!Array.isArray(payload)) {
+          if (
+            !Array.isArray(payload) ||
+            // When a request id exists payload should be processed by `peer.request`
+            typeof payload[0] === 'string'
+          ) {
             return
           }
 
-          const [sid, err, res] = payload
+          const [, err, res] = payload
 
           if (err) {
             _sendError(ws, err, res)
@@ -178,8 +182,6 @@ module.exports = (server) => {
             return
           }
           if (
-            !sid ||
-            typeof sid !== 'string' ||
             !res ||
             typeof res !== 'object' ||
             !res.action ||
