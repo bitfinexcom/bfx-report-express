@@ -13,6 +13,8 @@ const logger = new CustomLogger({
 }).createLogger()
 
 const gClientConf = config.get('grenacheClient')
+const appConfig = config.get('app')
+const httpRpcTimeout = appConfig?.httpRpcTimeout ?? 90000
 
 const Peer = Grenache.PeerRPCClient
 
@@ -22,7 +24,7 @@ const link = new Link({
 
 link.start()
 
-const peer = new Peer(link, { requestTimeout: 90000 })
+const peer = new Peer(link, { requestTimeout: httpRpcTimeout })
 
 peer.init()
 
@@ -31,7 +33,7 @@ const request = (query, cb) => {
     peer.request(
       gClientConf.query,
       query,
-      { timeout: 90000 },
+      { timeout: httpRpcTimeout },
       (err, data) => {
         if (err) {
           logger.debug(`Found error at ${err.stack || err}`)
