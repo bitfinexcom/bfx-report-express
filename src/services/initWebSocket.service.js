@@ -64,8 +64,8 @@ const _sendJsonRpcResponse = (ws, data, body) => {
       this.code = code
     },
     json (rpcRes) {
-      if (reqAdapter.action) {
-        rpcRes.action = reqAdapter.action
+      if (reqAdapter?.body?.action) {
+        rpcRes.action = reqAdapter?.body?.action
       }
 
       _sendData(ws, rpcRes)
