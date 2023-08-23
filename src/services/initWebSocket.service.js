@@ -19,6 +19,8 @@ const {
   grape,
   query
 } = config.get('grenacheClient')
+const appConfig = config.get('app')
+const wsRpcTimeout = appConfig?.wsRpcTimeout ?? 90000
 
 const _sendData = (ws, data) => {
   if (ws.readyState !== WebSocket.OPEN) {
@@ -62,8 +64,8 @@ const _sendJsonRpcResponse = (ws, data, body) => {
       this.code = code
     },
     json (rpcRes) {
-      if (reqAdapter.action) {
-        rpcRes.action = reqAdapter.action
+      if (reqAdapter?.body?.action) {
+        rpcRes.action = reqAdapter?.body?.action
       }
 
       _sendData(ws, rpcRes)
@@ -195,7 +197,7 @@ module.exports = (server) => {
         ws.on('message', (data) => {
           const payload = transport.parse(data)
 
-          peer.request(key, payload, { timeout: 10000 }, (err, result) => {
+          peer.request(key, payload, { timeout: wsRpcTimeout }, (err, result) => {
             if (err) {
               _sendError(ws, err, payload)
 
