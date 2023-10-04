@@ -1,6 +1,6 @@
 {
   "name": "bfx-report-express",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Express server of reporting tool",
   "main": "index.js",
   "engine": {
@@ -33,7 +33,6 @@
     "grenache-nodejs-http": "0.7.12",
     "grenache-nodejs-link": "0.7.12",
     "grenache-nodejs-ws": "git+https://github.com:bitfinexcom/grenache-nodejs-ws.git",
-    "lodash": "4.17.21",
     "morgan": "1.10.0",
     "winston": "3.3.3",
     "ws": "8.2.3"
