@@ -1,6 +1,6 @@
 {
   "name": "bfx-report-express",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Express server of reporting tool",
   "main": "index.js",
   "engine": {
