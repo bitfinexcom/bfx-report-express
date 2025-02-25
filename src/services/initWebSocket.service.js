@@ -95,14 +95,14 @@ const heartbeat = (socket) => {
 
   socket.pingTimeout = setTimeout(() => {
     socket.terminate()
-  }, 10000 + 1000)
+  }, 20_000 + 10_000)
 }
 
 module.exports = (server) => {
   const link = new Link({
     grape,
-    requestTimeout: 2500,
-    lruMaxAgeLookup: 10000
+    requestTimeout: 5_000,
+    lruMaxAgeLookup: 20_000
   })
   link.start()
 
@@ -132,7 +132,7 @@ module.exports = (server) => {
         }
 
         const opts = {
-          timeout: 10000,
+          timeout: 20_000,
           maxActiveKeyDests: 1,
           maxActiveDestTransports: 1
         }
