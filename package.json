@@ -28,17 +28,17 @@
     "colors": "1.4.0",
     "config": "3.3.8",
     "cors": "2.8.5",
-    "debug": "4.3.2",
-    "express": "4.21.0",
+    "debug": "4.4.0",
+    "express": "4.21.2",
     "grenache-nodejs-http": "0.7.13",
     "grenache-nodejs-link": "1.0.0",
     "grenache-nodejs-ws": "git+https://github.com:bitfinexcom/grenache-nodejs-ws.git",
     "morgan": "1.10.0",
     "winston": "3.3.3",
-    "ws": "8.18.0"
+    "ws": "8.18.1"
   },
   "devDependencies": {
-    "nodemon": "2.0.20",
+    "nodemon": "3.1.9",
     "standard": "17.0.0"
   },
   "nodemonConfig": {
