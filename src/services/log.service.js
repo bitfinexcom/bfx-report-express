@@ -13,7 +13,7 @@ const ext = '.log'
 
 const logLabel = isDevEnv ? ':app-dev' : ':app'
 const pathError = isEnable && (isProdEnv || isDevEnv) ? `${basePath}errors-express${ext}` : null
-const pathExcLogger = isEnable && (isProdEnv || isDevEnv) ? `${basePath}exceptions-express${ext}` : null
+const pathExcLogger = isEnable && isProdEnv ? `${basePath}exceptions-express${ext}` : null
 const pathLog = isEnable && isDevEnv ? `${basePath}logs-express${ext}` : null
 const enableConsole = isEnable && isDevEnv
 const enableColor = isEnable && isDevEnv
@@ -148,6 +148,12 @@ if (pathExcLogger) {
       colorize: false,
       maxsize: maxSize,
       format: combineFormat({ enableColor: enableColorPathExcLogger })
+    })
+  ]
+} else {
+  excLogTransports = [
+    new transports.Console({
+      format: combineFormat()
     })
   ]
 }
