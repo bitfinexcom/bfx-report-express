@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "nodemon": "3.1.9",
-    "standard": "17.0.0"
+    "standard": "17.1.2"
   },
   "nodemonConfig": {
     "verbose": true,
