@@ -33,7 +33,7 @@
     "grenache-nodejs-http": "1.0.1",
     "grenache-nodejs-link": "1.0.2",
     "grenache-nodejs-ws": "1.0.0",
-    "morgan": "1.10.0",
+    "morgan": "1.10.1",
     "winston": "3.19.0",
     "ws": "8.18.1"
   },
