@@ -27,7 +27,7 @@
     "better-npm-run": "0.1.1",
     "colors": "1.4.0",
     "config": "4.4.1",
-    "cors": "2.8.5",
+    "cors": "2.8.6",
     "debug": "4.4.3",
     "express": "4.22.1",
     "grenache-nodejs-http": "1.0.1",
