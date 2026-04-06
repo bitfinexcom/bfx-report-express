@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@bitfinex/bfx-report": "git+https://github.com/bitfinexcom/bfx-report.git",
+    "bfx-api-mock-srv": "git+https://github.com/bitfinexcom/bfx-api-mock-srv.git",
     "chai": "4.5.0",
     "cross-env": "10.1.0",
     "grenache-grape": "git+https://github.com/bitfinexcom/grenache-grape.git",
