@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/bitfinexcom/bfx-report-express#readme",
   "dependencies": {
-    "better-npm-run": "0.1.1",
     "colors": "1.4.0",
     "config": "4.4.1",
     "cors": "2.8.6",
@@ -38,8 +37,25 @@
     "ws": "8.19.0"
   },
   "devDependencies": {
+    "@bitfinex/bfx-report": "git+https://github.com/bitfinexcom/bfx-report.git",
+    "bfx-api-mock-srv": "git+https://github.com/bitfinexcom/bfx-api-mock-srv.git",
+    "chai": "4.5.0",
+    "cross-env": "10.1.0",
+    "grenache-grape": "git+https://github.com/bitfinexcom/grenache-grape.git",
+    "mocha": "11.7.5",
     "nodemon": "3.1.11",
-    "standard": "17.1.2"
+    "standard": "17.1.2",
+    "supertest": "7.2.2"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "before",
+      "after",
+      "beforeEach",
+      "afterEach"
+    ]
   },
   "nodemonConfig": {
     "verbose": true,
@@ -51,29 +67,8 @@
       ".vscode/"
     ]
   },
-  "betterScripts": {
-    "start:prod": {
-      "command": "node index.js",
-      "env": {
-        "NODE_ENV": "production"
-      }
-    },
-    "start:dev": {
-      "command": "nodemon index.js",
-      "env": {
-        "NODE_ENV": "development"
-      }
-    },
-    "test": {
-      "command": "standard",
-      "env": {
-        "NODE_ENV": "test"
-      }
-    }
-  },
   "scripts": {
-    "start": "better-npm-run start:prod",
-    "startDev": "better-npm-run start:dev",
-    "test": "better-npm-run test"
+    "start": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "standard && cross-env NODE_ENV=test mocha './test/**/*.spec.js' --config .mocharc.json"
   }
 }
