@@ -30,7 +30,7 @@
     "debug": "^4.4.3",
     "express": "^4.22.3",
     "grenache-nodejs-http": "^2.0.2",
-    "grenache-nodejs-link": "1.0.2",
+    "grenache-nodejs-link": "^2.0.2",
     "grenache-nodejs-ws": "1.0.0",
     "morgan": "1.10.1",
     "winston": "3.19.0",
