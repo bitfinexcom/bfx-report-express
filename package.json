@@ -34,7 +34,7 @@
     "grenache-nodejs-ws": "1.0.0",
     "morgan": "^1.12.1",
     "winston": "^3.19.0",
-    "ws": "8.19.0"
+    "ws": "^8.22.2"
   },
   "devDependencies": {
     "@bitfinex/bfx-report": "git+https://github.com/bitfinexcom/bfx-report.git",
