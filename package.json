@@ -75,7 +75,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon index.js",
     "test": "npm run lint && cross-env NODE_ENV=test mocha './test/**/*.spec.js' --config .mocharc.json",
-    "lint": "bfx-lint-js",
-    "lint:fix": "bfx-lint-js --fix"
+    "lint": "bfx-lint-js --mocha",
+    "lint:fix": "bfx-lint-js --mocha --fix"
   }
 }
