@@ -1,6 +1,6 @@
 'use strict'
 
-const WebSocket = require('ws')
+const { WebSocketServer, WebSocket } = require('ws')
 const { PeerRPCClient } = require('grenache-nodejs-ws')
 const Link = require('grenache-nodejs-link')
 const config = require('config')
@@ -108,7 +108,7 @@ module.exports = (server) => {
 
   const key = `${query}:ws`
 
-  const wss = new WebSocket.Server({ server, path: '/ws' })
+  const wss = new WebSocketServer({ server, path: '/ws' })
 
   wss.on('error', (err) => {
     logger.error(err.stack || err)

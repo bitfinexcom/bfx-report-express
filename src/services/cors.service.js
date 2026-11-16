@@ -4,10 +4,9 @@ const cors = require('cors')
 
 const corsBase = () => {
   const corsOptions = {
-    origin: true,
+    origin: '*',
     methods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
-    credentials: true,
     optionsSuccessStatus: 200
   }
 

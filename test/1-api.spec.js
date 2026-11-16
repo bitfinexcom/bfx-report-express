@@ -1,82 +1,101 @@
 'use strict'
 
-const { copyFile, rm } = require('node:fs/promises')
 const path = require('node:path')
 const { assert } = require('chai')
 const request = require('supertest')
-
 const {
-  startEnvironment,
-  stopEnvironment
-} = require('@bitfinex/bfx-report/test/helpers/helpers.boot')
-const {
-  createMockRESTv2SrvWithDate
-} = require('@bitfinex/bfx-report/test/helpers/helpers.mock-rest-v2')
+  grapes: createGrapes,
+  fxgrenache: createFxGrenache
+} = require('@bitfinex/bfx-svc-test-helper')
 
 process.env.NODE_CONFIG_DIR = path.join(__dirname, 'config')
-const { app } = require('../index')
-const agent = request.agent(app)
-
+const config = require('config')
+const grcSrvName = config.get('grenacheClient.query')
 const basePath = '/api'
-const date = new Date()
-const end = date.getTime()
-const start = (new Date()).setDate(date.getDate() - 1)
 const auth = {
   apiKey: 'fake',
   apiSecret: 'fake'
 }
-const mainWorkerConfigPath = path.join(__dirname, '../node_modules/@bitfinex/bfx-report/config')
-const workerConfigPaths = [
-  { from: 'common.json.example', to: 'common.json' },
-  { from: 'service.report.json.example', to: 'service.report.json' },
-  { from: 'facs/grc.config.json.example', to: 'facs/grc.config.json' },
-  { from: 'facs/grc-slack.config.json.example', to: 'facs/grc-slack.config.json' }
-]
 
-let mockRESTv2Srv = null
+const grapes = createGrapes()
 
-const copyWorkerConfigs = async () => {
-  for (const { from, to } of workerConfigPaths) {
-    await copyFile(
-      path.join(mainWorkerConfigPath, from),
-      path.join(mainWorkerConfigPath, to)
-    )
+const makeJsonRpcResponse = (args, result) => {
+  const jsonrpc = '2.0'
+  const id = args?.id ?? null
+
+  if (result instanceof Error) {
+    const {
+      code,
+      message,
+      data
+    } = result
+
+    return {
+      jsonrpc,
+      error: { code, message, data },
+      id
+    }
   }
+
+  return { jsonrpc, result, id }
 }
 
-const rmWorkerConfigs = async () => {
-  for (const { to } of workerConfigPaths) {
-    await rm(
-      path.join(mainWorkerConfigPath, to),
-      {
-        recursive: true,
-        force: true,
-        maxRetries: 5,
-        retryDelay: 300
+const stubs = {
+  [grcSrvName]: {
+    verifyUser (space, args, cb) {
+      const { apiKey, apiSecret } = args?.auth ?? {}
+
+      if (
+        apiKey !== auth.apiKey ||
+        apiSecret !== auth.apiSecret
+      ) {
+        const error = new Error('Unauthorized')
+        error.code = 401
+        error.data = { someExtraData: null }
+
+        cb(null, makeJsonRpcResponse(args, error))
+
+        return
       }
-    )
+
+      cb(null, makeJsonRpcResponse(args, {
+        id: 12345,
+        username: 'fake_user',
+        timezone: 'UTC',
+        email: 'fake@email.fake',
+        isSubAccount: false,
+        isUserMerchant: false
+      }))
+    }
   }
 }
 
 describe('API', () => {
+  let fxg = null
+  let server = null
+  let agent = null
+
   before(async function () {
     this.timeout(20000)
 
-    mockRESTv2Srv = createMockRESTv2SrvWithDate(start, end, 2)
-
-    await copyWorkerConfigs()
-    await startEnvironment(true, true)
+    await grapes.start()
+    fxg = createFxGrenache(stubs, grapes)
+    await fxg.start()
+    server = await new Promise((resolve) => {
+      const { app } = require('../index')
+      agent = request.agent(app)
+      app.on('listened', resolve)
+    })
   })
 
   after(async function () {
     this.timeout(20000)
 
-    try {
-      await mockRESTv2Srv.close()
-    } catch (err) {}
-
-    await stopEnvironment()
-    await rmWorkerConfigs()
+    await new Promise((resolve) => {
+      server.close(resolve)
+    })
+    await fxg.stop()
+    await grapes.stop()
   })
 
   it('it should be successfully auth', async function () {
